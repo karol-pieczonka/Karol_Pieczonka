@@ -1,5 +1,7 @@
 # Zadanie Rekrutacyjne – Etap 1
 
+### Nie oczekujemy gotowego produktu - zrób tyle ile będziesz w stanie zrobić. Pierwszy commit oznacza start zadania i od niego liczone jest 8h.
+
 ## Cel
 
 Twoim zadaniem jest przygotowanie mini-aplikacji w Angular 20 z wykorzystaniem nowoczesnych funkcjonalności frameworka.
