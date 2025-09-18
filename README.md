@@ -18,7 +18,8 @@ Projekt ma być responsywny i działać zarówno na desktopie, jak i na urządze
 - **Nazwa repozytorium:** imię i nazwisko kandydata.  
 - **Czas na wykonanie:** do 8 godzin.  
 - **Commity:** częste i opisowe.  
-- Kod powinien być zgodny z dobrymi praktykami (DRY, SOLID, czystość architektury).  
+- Kod powinien być zgodny z dobrymi praktykami (DRY, SOLID, czystość architektury).
+- Użycie AI dopuszczalne jako wsparcie w zakresie planowania, testów i dokumentacji. 
 
 ---
 
@@ -44,7 +45,7 @@ Przed rozpoczęciem pracy należy przygotować w pliku `.md` (oczekujemy użycia
 - strukturę katalogów,  
 - listę komponentów,  
 - serwisy,  
-- podejście do zarządzania stanem.  
+- podejście do zarządzania stanem.
 
 ---
 
