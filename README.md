@@ -1,59 +1,94 @@
-# ProffeoTask
+# Zadanie Rekrutacyjne – Etap 1
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.2.1.
+## Cel
 
-## Development server
+Twoim zadaniem jest przygotowanie mini-aplikacji w Angular 20 z wykorzystaniem nowoczesnych funkcjonalności frameworka.
 
-To start a local development server, run:
+Aplikacja powinna korzystać z publicznego API [jsonplaceholder.typicode.com](https://jsonplaceholder.typicode.com), prezentować listę postów wraz z możliwością ich filtrowania, przeglądania szczegółów oraz dodawania do ulubionych.  
+Projekt ma być responsywny i działać zarówno na desktopie, jak i na urządzeniach mobilnych.
 
-```bash
-ng serve
-```
+---
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Zasady realizacji
+- Zadanie należy umieścić w publicznym repozytorium GitHub, aby był wgląd w historię commitów.  
+- **Nazwa repozytorium:** imię i nazwisko kandydata.  
+- **Czas na wykonanie:** do 8 godzin.  
+- **Commity:** częste i opisowe.  
+- Kod powinien być zgodny z dobrymi praktykami (DRY, SOLID, czystość architektury).  
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Wymagania techniczne
 
-```bash
-ng generate component component-name
-```
+- **Framework:** Angular 20  
+- **Komponenty:** standalone components  
+- **Stan:** signals  
+- **Change detection:** zoneless (`provideZonelessChangeDetection()`)  
+- **Style:** TailwindCSS v4 (theme, zmienne, flexbox)  
+- **Architektura:** lazy loading modułów/feature’ów  
+- **Stan aplikacji:** signals + prosty singleton service trzymający dane w pamięci (cache)  
+- **Animacje:** co najmniej jedna w nowej składni `animate.enter` / `animate.leave`  
+- **Asynchroniczność:** RxJS + HttpClient  
+- **Loader:** prosty spinner lub skeleton  
+- **Responsywność:** poprawne wyświetlanie na desktopie i mobile  
+- **Struktura katalogów:** przejrzysta i uporządkowana (np. `features/`, `shared/`, `core/`, `services/`)  
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
-```
+## Plan przed implementacją
+Przed rozpoczęciem pracy należy przygotować w pliku `.md` (oczekujemy użycia AI do planowania i dokumentacji):
+- strukturę katalogów,  
+- listę komponentów,  
+- serwisy,  
+- podejście do zarządzania stanem.  
 
-## Building
+---
 
-To build the project run:
+## Funkcjonalności
 
-```bash
-ng build
-```
+### 1. Lista postów
+- Pobranie listy z API:  
+  `https://jsonplaceholder.typicode.com/posts`  
+- Wyświetlenie listy tytułów i fragmentów treści.  
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+### 2. Szczegóły posta
+Po kliknięciu w post załaduj i wyświetl:  
+- pełną treść posta,  
+- dane autora (`/users/:id`),  
+- komentarze (`/posts/:id/comments`).  
 
-## Running unit tests
+### 3. Filtrowanie
+- **Po treści posta** – filtracja po stronie frontendu.  
+- **Po użytkowniku** – filtrowanie przez query param:  
+  `https://jsonplaceholder.typicode.com/posts?userId=1`  
+- **Tylko ulubione** – filtrowanie postów oznaczonych jako ulubione (stan w singletonie).  
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### 4. Ulubione
+- Możliwość oznaczania posta jako ulubiony (toggle).  
+- Lista ulubionych przechowywana w singletonie (stan w serwisie).  
 
-```bash
-ng test
-```
+### 5. Singleton (cache)
+Dane postów muszą być przechowywane w singleton service (signal store).  
+Dzięki temu posty nie są pobierane ponownie przy każdym wejściu.  
 
-## Running end-to-end tests
+Ponowne zapytania do API wykonujemy tylko w przypadku:  
+- zmiany filtrów,  
+- odświeżenia strony.  
 
-For end-to-end (e2e) testing, run:
+---
 
-```bash
-ng e2e
-```
+## Bonus (dodatkowe punkty)
+- Dodaj zakładkę z widokiem Gantta, w którym pokażesz posty z zamockowanymi datami start–end (API ich nie zwraca).  
+- Dane mogą być zapisane w modelach TypeScript.  
+- Wyświetlenie w formie prostego timeline (tablica Gantt).  
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+---
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Podsumowanie
+Aplikacja powinna:  
+- pobierać i wyświetlać posty,  
+- umożliwiać filtrowanie,  
+- prezentować szczegóły posta,  
+- obsługiwać ulubione,  
+- być responsywna i nowoczesna,  
+- korzystać z najnowszych funkcjonalności Angulara 20.  
