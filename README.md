@@ -1,6 +1,6 @@
 # Zadanie Rekrutacyjne – Etap 1
 
-### Nie oczekujemy gotowego produktu - zrób tyle ile będziesz w stanie zrobić. Pierwszy commit oznacza start zadania i od niego liczone jest do 8h. (Zadanie w najprostszym wariancie powinno zająć około 3-4 godziny)
+### Nie oczekujemy gotowego produktu - zrób tyle ile będziesz w stanie zrobić. Otrzymanie zadania oznacza start zadania i od niego liczone jest do 8h. (Zadanie w najprostszym wariancie powinno zająć około 3-4 godziny)
 
 ### Dla jasności - żaden fragment zadania nie zostanie wykorzystany komercyjnie, jest to zadanie czysto rekrutacyjne.
 
