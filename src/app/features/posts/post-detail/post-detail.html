@@ -1,15 +1,15 @@
 @if (post(); as postData) {
-  <div class="container mx-auto py-10 px-5">
+  <div class="container mx-auto my-5 md:py-10 px-5">
 
     <a routerLink="/posts" class="btn-primary mb-10">
       &larr; Back to Posts
     </a>
 
-    <div class="grid grid-cols-10 gap-5 sm:gap-10">
-      <div class="col-span-4">
+    <div class="grid grid-cols-1 md:grid-cols-10 gap-5 sm:gap-10">
+      <div class="md:col-span-4">
         <img [src]="postData.imageUrl" [alt]="postData.title" class="w-full h-96 object-cover rounded-xl shadow-lg mb-8">
       </div>
-      <div class="col-span-6">
+      <div class="md:col-span-6">
         <div class="flex items-center gap-4 mb-5">
           <h1 class="text-4xl font-bold">{{ postData.title }}</h1>
           <button
