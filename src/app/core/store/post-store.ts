@@ -8,6 +8,7 @@ export interface PostsState {
   posts: Post[];
   loading: boolean;
   error: string | null;
+  userId?: number;
 }
 
 @Injectable({
@@ -29,16 +30,16 @@ export class PostStoreService {
   readonly error = computed(() => this.state().error);
 
   // Methods to modify state
-  loadPosts() {
-    // Simple cache mechanism - don't fetch if already in state
-    if (this.state().posts.length > 0) {
+  loadPosts(userId?: number) {
+    // Simple cache mechanism - don't fetch if the filter hasn't changed
+    if (this.state().posts.length > 0 && this.state().userId === userId) {
       return;
     }
 
-    this.state.update((state) => ({ ...state, loading: true }));
+    this.state.update((state) => ({ ...state, loading: true, userId }));
 
     this.apiService
-      .getPosts()
+      .getPosts(userId)
       .pipe(
         map((posts) =>
           posts.map((post, index) => {
