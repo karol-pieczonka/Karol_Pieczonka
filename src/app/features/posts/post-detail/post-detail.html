@@ -1,0 +1,32 @@
+@if (post(); as postData) {
+  <div class="container mx-auto py-10 px-5">
+
+    <a routerLink="/posts" class="btn-primary mb-10">
+      &larr; Back to Posts
+    </a>
+
+    <div class="grid grid-cols-10 gap-5 sm:gap-10">
+      <div class="col-span-4">
+        <img [src]="postData.imageUrl" [alt]="postData.title" class="w-full h-96 object-cover rounded-xl shadow-lg mb-8">
+      </div>
+      <div class="col-span-6">
+        <h1 class="text-4xl font-bold mb-4">{{ postData.title }}</h1>
+
+        @if (user(); as userData) {
+          <div class="flex items-center text-gray-600 mb-8">
+            <p class="text-lg">by <span class="font-semibold">{{ userData.name }}</span> ({{ userData.email }})</p>
+          </div>
+        }
+
+        <p class="text-xl leading-relaxed text-gray-800">{{ postData.body }}</p>
+      </div>
+    </div>
+    <hr class="my-12">
+
+    @if (comments(); as postComments) {
+      <app-post-comments [comments]="postComments" />
+    }
+  </div>
+} @else {
+  <app-loader />
+}

@@ -1,0 +1,18 @@
+<div class="mt-12">
+  <h2 class="text-3xl font-bold mb-6">Comments</h2>
+  @if (comments.length > 0) {
+    <div class="space-y-6">
+      @for (comment of comments; track comment.id) {
+        <div class="bg-gray-100 p-6 rounded-lg shadow flex space-x-5 gap-2">
+          <img class="size-12" src="https://avatar.iran.liara.run/public/50" alt="Avatar">
+          <div>
+            <p class="font-semibold text-gray-800">{{ comment.name }} ({{ comment.email }})</p>
+            <p class="text-gray-600 mt-2">{{ comment.body }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <p>No comments yet.</p>
+  }
+</div>
