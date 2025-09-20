@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { delay } from 'rxjs/operators';
 import { Post } from '../models/post.model';
 import { User } from '../models/user.model';
 import { Comment } from '../models/comment.model';
@@ -17,7 +18,9 @@ export class ApiService {
     if (userId) {
       params = params.set('userId', userId.toString());
     }
-    return this.http.get<Post[]>(`${this.apiUrl}/posts`, { params });
+    return this.http
+      .get<Post[]>(`${this.apiUrl}/posts`, { params })
+      .pipe(delay(1500)); // delay to show the loader in the UI
   }
 
   getPost(id: number): Observable<Post> {

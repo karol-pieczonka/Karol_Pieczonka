@@ -1,6 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { EMPTY, tap } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { Post } from '../models/post.model';
 import { ApiService } from '../services/api.service';
 
@@ -40,6 +40,22 @@ export class PostStoreService {
     this.apiService
       .getPosts()
       .pipe(
+        map((posts) =>
+          posts.map((post, index) => {
+            const startDate = new Date();
+            startDate.setDate(startDate.getDate() + index); // Each post starts the day after the previous one
+
+            const endDate = new Date(startDate);
+            endDate.setDate(startDate.getDate() + ((post.id % 5) + 1)); // Duration from 1 to 5 days
+
+            return {
+              ...post,
+              imageUrl: `https://picsum.photos/seed/${post.id}/400/600`,
+              startDate,
+              endDate,
+            };
+          })
+        ),
         tap((posts) => {
           this.state.update((state) => ({
             ...state,

@@ -1,1 +1,22 @@
-<p>post-list works!</p>
+<div class="container mx-auto py-10 px-5">
+  <h2 class="text-5xl font-bold text-center">Posts</h2>
+  <p class="text-gray-700 pt-5 pb-10 text-center">The best posts in the world!</p>
+
+  @if (store.loading()) {
+    <app-loader />
+  } @else if (store.error()) {
+    <p class="text-red-500 text-lg text-center">{{ store.error() }}</p>
+  } @else {
+    <div class="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
+      @for (post of store.posts(); track post.id; let i = $index) {
+
+        <app-post-item
+          [post]="post"
+          [style.--i]="i"
+          animate.enter="fade-in"
+        />
+
+      }
+    </div>
+  }
+</div>
