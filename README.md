@@ -1,99 +1,77 @@
-# Zadanie Rekrutacyjne – Etap 1
+# Plan Implementacji
 
-### Nie oczekujemy gotowego produktu - zrób tyle ile będziesz w stanie zrobić. Otrzymanie zadania oznacza start zadania i od niego liczone jest do 8h. (Zadanie w najprostszym wariancie powinno zająć około 3-4 godziny)
+Poniższy dokument opisuje planowaną architekturę i podejście do implementacji aplikacji, zgodnie z wytycznymi zadania rekrutacyjnego.
 
-### Dla jasności - żaden fragment zadania nie zostanie wykorzystany komercyjnie, jest to zadanie czysto rekrutacyjne.
+## 1. Struktura Katalogów
 
-## Cel
+Projekt będzie zorganizowany w sposób modularny i zorientowany na funkcjonalności, aby zapewnić przejrzystość i skalowalność.
 
-Twoim zadaniem jest przygotowanie mini-aplikacji w Angular 20 z wykorzystaniem nowoczesnych funkcjonalności frameworka.
+## 2. Lista Komponentów
 
-Aplikacja powinna korzystać z publicznego API [jsonplaceholder.typicode.com](https://jsonplaceholder.typicode.com), prezentować listę postów wraz z możliwością ich filtrowania, przeglądania szczegółów oraz dodawania do ulubionych.  
-Projekt ma być responsywny i działać zarówno na desktopie, jak i na urządzeniach mobilnych.
+-   **`App` (root)**: Główny komponent aplikacji, zawiera `router-outlet` i nagłówek.
+-   **`Header` (shared)**: Nagłówek z nawigacją.
+-   **`Loader` (shared)**: Prosty komponent wyświetlający animację ładowania.
+-   **`PostList` (feature)**: Wyświetla listę postów, obsługuje filtrowanie (po tekście, użytkowniku, ulubionych).
+-   **`PostItem` (feature)**: Reprezentuje pojedynczy element na liście postów.
+-   **`PostDetail` (feature)**: Wyświetla szczegóły posta, dane autora i komentarze.
+-   **`PostComments` (feature)**: Komponent do wyświetlania listy komentarzy pod postem.
+-   **`FavoritePosts` (feature)**: Osobna strona/komponent do wyświetlania tylko ulubionych postów.
 
----
+## 3. Serwisy
 
-## Zasady realizacji
-- Zadanie należy umieścić w publicznym repozytorium GitHub, aby był wgląd w historię commitów.  
-- **Nazwa repozytorium:** imię i nazwisko kandydata.  
-- **Czas na wykonanie:** do 8 godzin.  
-- **Commity:** częste i opisowe.  
-- Kod powinien być zgodny z dobrymi praktykami (DRY, SOLID, czystość architektury).
-- Użycie AI dopuszczalne jako wsparcie w zakresie planowania, testów i dokumentacji. 
+-   **`ApiService` (`core/services`)**: Odpowiedzialny za całą komunikację z zewnętrznym API `jsonplaceholder.typicode.com`. Będzie zawierał metody do pobierania postów, użytkowników i komentarzy.
+-   **`PostStoreService` (`core/store`)**: Singleton działający jako prosty "store" dla aplikacji. Będzie zarządzał stanem postów, ulubionych, statusami ładowania i błędów przy użyciu sygnałów (Signals). Zapewni mechanizm cache'owania danych.
 
----
+## 4. Podejście do Zarządzania Stanem
 
-## Wymagania techniczne
+Zarządzanie stanem zostanie zrealizowane w oparciu o **Angular Signals** oraz prosty **singleton service** (`PostStoreService`), co jest zgodne z nowoczesnymi praktykami i wymaganiami `zoneless change detection`.
 
-- **Framework:** Angular 20  
-- **Komponenty:** standalone components  
-- **Stan:** signals  
-- **Change detection:** zoneless (`provideZonelessChangeDetection()`)  
-- **Style:** TailwindCSS v4 (theme, zmienne, flexbox)  
-- **Architektura:** lazy loading modułów/feature’ów  
-- **Stan aplikacji:** signals + prosty singleton service trzymający dane w pamięci (cache)  
-- **Animacje:** co najmniej jedna w nowej składni `animate.enter` / `animate.leave`  
-- **Asynchroniczność:** RxJS + HttpClient  
-- **Loader:** prosty spinner lub skeleton  
-- **Responsywność:** poprawne wyświetlanie na desktopie i mobile  
-- **Struktura katalogów:** przejrzysta i uporządkowana (np. `features/`, `shared/`, `core/`, `services/`)  
-
----
-
-## Plan przed implementacją
-Przed rozpoczęciem pracy należy przygotować w pliku `.md` (oczekujemy użycia AI do planowania i dokumentacji):
-- strukturę katalogów,  
-- listę komponentów,  
-- serwisy,  
-- podejście do zarządzania stanem.
+-   **Źródło prawdy**: `PostStoreService` będzie jedynym źródłem prawdy dla danych aplikacji (posty, ulubione).
+-   **Stan**: Główny stan będzie przechowywany w prywatnym sygnale `signal<State>`.
+-   **Selekcja danych**: Publiczne, tylko do odczytu, `computed` sygnały będą udostępniać fragmenty stanu komponentom (np. `posts()`, `loading()`, `error()`).
+-   **Aktualizacje**: Komponenty będą wywoływać publiczne metody serwisu (np. `loadPosts()`, `toggleFavorite(postId)`), które będą modyfikować stan za pomocą metody `.update()`.
+-   **Reaktywność**: Komponenty, konsumując sygnały ze store'u, będą automatycznie i wydajnie aktualizować widok, gdy stan się zmieni.
+-   **Cache**: Serwis będzie implementował prostą logikę cache'owania, aby unikać zbędnych zapytań do API, jeśli dane zostały już pobrane.
 
 ---
 
 ## Funkcjonalności
 
 ### 1. Lista postów
-- Pobranie listy z API:  
-  `https://jsonplaceholder.typicode.com/posts`  
-- Wyświetlenie listy tytułów i fragmentów treści.  
+- Pobranie listy z API:
+  `https://jsonplaceholder.typicode.com/posts`
+- Wyświetlenie listy tytułów i fragmentów treści.
 
 ### 2. Szczegóły posta
-Po kliknięciu w post załaduj i wyświetl:  
-- pełną treść posta,  
-- dane autora (`/users/:id`),  
-- komentarze (`/posts/:id/comments`).  
+Po kliknięciu w post załaduj i wyświetl:
+- pełną treść posta,
+- dane autora (`/users/:id`),
+- komentarze (`/posts/:id/comments`).
 
 ### 3. Filtrowanie
-- **Po treści posta** – filtracja po stronie frontendu.  
-- **Po użytkowniku** – filtrowanie przez query param:  
-  `https://jsonplaceholder.typicode.com/posts?userId=1`  
-- **Tylko ulubione** – filtrowanie postów oznaczonych jako ulubione (stan w singletonie).  
+- **Po treści posta** – filtracja po stronie frontendu.
+- **Po użytkowniku** – filtrowanie przez query param:
+  `https://jsonplaceholder.typicode.com/posts?userId=1`
+- **Tylko ulubione** – filtrowanie postów oznaczonych jako ulubione (stan w singletonie).
 
 ### 4. Ulubione
-- Możliwość oznaczania posta jako ulubiony (toggle).  
-- Lista ulubionych przechowywana w singletonie (stan w serwisie).  
+- Możliwość oznaczania posta jako ulubiony (toggle).
+- Lista ulubionych przechowywana w singletonie (stan w serwisie).
 
 ### 5. Singleton (cache)
-Dane postów muszą być przechowywane w singleton service (signal store).  
-Dzięki temu posty nie są pobierane ponownie przy każdym wejściu.  
+Dane postów muszą być przechowywane w singleton service (signal store).
+Dzięki temu posty nie są pobierane ponownie przy każdym wejściu.
 
-Ponowne zapytania do API wykonujemy tylko w przypadku:  
-- zmiany filtrów,  
-- odświeżenia strony.  
+Ponowne zapytania do API wykonujemy tylko w przypadku:
+- zmiany filtrów,
+- odświeżenia strony.
 
----
-
-## Bonus (dodatkowe punkty)
-- Dodaj zakładkę z widokiem Gantta, w którym pokażesz posty z zamockowanymi datami start–end (API ich nie zwraca).  
-- Dane mogą być zapisane w modelach TypeScript.  
-- Wyświetlenie w formie prostego timeline (tablica Gantt).  
-
----
 
 ## Podsumowanie
-Aplikacja powinna:  
-- pobierać i wyświetlać posty,  
-- umożliwiać filtrowanie,  
-- prezentować szczegóły posta,  
-- obsługiwać ulubione,  
-- być responsywna i nowoczesna,  
-- korzystać z najnowszych funkcjonalności Angulara 20.  
+Aplikacja powinna:
+- pobierać i wyświetlać posty,
+- umożliwiać filtrowanie,
+- prezentować szczegóły posta,
+- obsługiwać ulubione,
+- być responsywna i nowoczesna,
+- korzystać z najnowszych funkcjonalności Angulara 20.
