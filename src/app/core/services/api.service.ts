@@ -20,7 +20,7 @@ export class ApiService {
     }
     return this.http
       .get<Post[]>(`${this.apiUrl}/posts`, { params })
-      .pipe(delay(500)); // delay to show the loader in the UI
+      .pipe(delay(300)); // delay to show the loader in the UI
   }
 
   getPost(id: number): Observable<Post> {

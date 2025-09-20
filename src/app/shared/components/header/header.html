@@ -1,1 +1,28 @@
-<p>header works!</p>
+<header class="bg-white shadow-md mb-10">
+  <nav class="container mx-auto px-5 py-4 flex justify-between items-center">
+    <a routerLink="/posts" class="text-2xl font-bold text-violet-600 hover:text-violet-800 transition-colors">
+      PostApp
+    </a>
+    <ul class="flex items-center gap-8 text-lg">
+      <li>
+        <a
+          routerLink="/posts"
+          routerLinkActive="text-violet-600 font-semibold border-b-2 border-violet-600"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="text-gray-600 hover:text-violet-600 transition-colors pb-1"
+        >
+          Home page
+        </a>
+      </li>
+      <li>
+        <a
+          routerLink="/favorites"
+          routerLinkActive="text-violet-600 font-semibold border-b-2 border-violet-600"
+          class="text-gray-600 hover:text-violet-600 transition-colors pb-1"
+        >
+          Favorites
+        </a>
+      </li>
+    </ul>
+  </nav>
+</header>
