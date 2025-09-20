@@ -2,7 +2,7 @@
   <h2 class="text-5xl font-bold text-center">Posts</h2>
   <p class="text-gray-700 pt-5 pb-10 text-center">The best posts in the world!</p>
 
-  <div class="flex flex-col sm:flex-row gap-4 mb-8">
+  <div class="flex flex-col sm:flex-row gap-4 mb-8 items-center">
     <input
       type="text"
       placeholder="Filter posts by title or content..."
@@ -19,6 +19,15 @@
         <option [value]="user.id">{{ user.name }}</option>
       }
     </select>
+    <div class="flex items-center gap-2 self-end sm:self-center pb-3 sm:pb-0">
+      <input
+        type="checkbox"
+        id="favorites-filter"
+        class="h-5 w-5 rounded border-gray-300 text-violet-600 focus:ring-violet-500"
+        (change)="onFavoritesFilterChange($event)"
+      />
+      <label for="favorites-filter" class="text-gray-700 whitespace-nowrap">Only Favorites</label>
+    </div>
   </div>
 
   @if (store.loading()) {

@@ -18,20 +18,29 @@ export class PostList implements OnInit {
   private readonly apiService = inject(ApiService);
 
   readonly filter = signal('');
+  readonly showOnlyFavorites = signal(false);
   readonly users = toSignal(this.apiService.getUsers(), { initialValue: [] as User[] });
 
   readonly filteredPosts = computed(() => {
+    const allPosts = this.store.posts();
     const searchTerm = this.filter().toLowerCase();
-    if (!searchTerm) {
-      return this.store.posts();
+    const onlyFavorites = this.showOnlyFavorites();
+
+    let posts = allPosts;
+
+    if (onlyFavorites) {
+      posts = posts.filter((post) => post.isFavorite);
     }
-    return this.store
-      .posts()
-      .filter(
+
+    if (searchTerm) {
+      posts = posts.filter(
         (post) =>
           post.title.toLowerCase().includes(searchTerm) ||
           post.body.toLowerCase().includes(searchTerm)
       );
+    }
+
+    return posts;
   });
 
   ngOnInit(): void {
@@ -47,5 +56,10 @@ export class PostList implements OnInit {
     const select = event.target as HTMLSelectElement;
     const userId = select.value ? +select.value : undefined;
     this.store.loadPosts(userId);
+  }
+
+  onFavoritesFilterChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.showOnlyFavorites.set(input.checked);
   }
 }
