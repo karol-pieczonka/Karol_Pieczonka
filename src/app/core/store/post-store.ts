@@ -9,6 +9,7 @@ export interface PostsState {
   loading: boolean;
   error: string | null;
   userId?: number;
+  favoritePostIds: number[];
 }
 
 @Injectable({
@@ -17,21 +18,25 @@ export interface PostsState {
 export class PostStoreService {
   private readonly apiService = inject(ApiService);
 
-  // Private state signal
   private readonly state = signal<PostsState>({
     posts: [],
     loading: false,
     error: null,
+    favoritePostIds: [],
   });
 
-  // Selectors (public signals for reading state)
-  readonly posts = computed(() => this.state().posts);
+  readonly posts = computed(() => {
+    const state = this.state();
+    return state.posts.map((post) => ({
+      ...post,
+      isFavorite: state.favoritePostIds.includes(post.id),
+    }));
+  });
   readonly loading = computed(() => this.state().loading);
   readonly error = computed(() => this.state().error);
+  readonly favoritePostIds = computed(() => this.state().favoritePostIds);
 
-  // Methods to modify state
   loadPosts(userId?: number) {
-    // Simple cache mechanism - don't fetch if the filter hasn't changed
     if (this.state().posts.length > 0 && this.state().userId === userId) {
       return;
     }
@@ -44,11 +49,9 @@ export class PostStoreService {
         map((posts) =>
           posts.map((post, index) => {
             const startDate = new Date();
-            startDate.setDate(startDate.getDate() + index); // Each post starts the day after the previous one
-
+            startDate.setDate(startDate.getDate() + index);
             const endDate = new Date(startDate);
-            endDate.setDate(startDate.getDate() + ((post.id % 5) + 1)); // Duration from 1 to 5 days
-
+            endDate.setDate(startDate.getDate() + ((post.id % 5) + 1));
             return {
               ...post,
               imageUrl: `https://picsum.photos/seed/${post.id}/400/600`,
@@ -75,5 +78,15 @@ export class PostStoreService {
         })
       )
       .subscribe();
+  }
+
+  toggleFavorite(postId: number) {
+    this.state.update((state) => {
+      const favorites = state.favoritePostIds;
+      const newFavorites = favorites.includes(postId)
+        ? favorites.filter((id) => id !== postId)
+        : [...favorites, postId];
+      return { ...state, favoritePostIds: newFavorites };
+    });
   }
 }

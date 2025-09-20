@@ -6,8 +6,9 @@ import { toSignal } from '@angular/core/rxjs-interop';
 
 import { ApiService } from '../../../core/services/api.service';
 import { Loader } from '../../../shared/components/loader/loader';
-
 import { PostComments } from '../post-comments/post-comments';
+import { PostStoreService } from '../../../core/store/post-store';
+import { Post } from '../../../core/models/post.model';
 
 @Component({
   selector: 'app-post-detail',
@@ -18,6 +19,7 @@ import { PostComments } from '../post-comments/post-comments';
 export class PostDetail {
   private readonly route = inject(ActivatedRoute);
   private readonly apiService = inject(ApiService);
+  readonly store = inject(PostStoreService);
 
   private readonly data$ = this.route.params.pipe(
     map((params) => +params['id']),
@@ -32,7 +34,7 @@ export class PostDetail {
               post: {
                 ...post,
                 imageUrl: `https://picsum.photos/seed/${post.id}/1200/800`,
-              },
+              } as Post,
               user,
               comments,
             }))
@@ -44,7 +46,12 @@ export class PostDetail {
 
   private readonly data = toSignal(this.data$);
 
-  readonly post = computed(() => this.data()?.post);
+  readonly post = computed(() => {
+    const postData = this.data()?.post;
+    if (!postData) return undefined;
+    const isFavorite = this.store.favoritePostIds().includes(postData.id);
+    return { ...postData, isFavorite };
+  });
   readonly user = computed(() => this.data()?.user);
   readonly comments = computed(() => this.data()?.comments);
 }

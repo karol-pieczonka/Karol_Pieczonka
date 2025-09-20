@@ -6,4 +6,5 @@ export interface Post {
   imageUrl: string;
   startDate: Date;
   endDate: Date;
+  isFavorite?: boolean;
 }
