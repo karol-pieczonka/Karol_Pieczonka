@@ -1,6 +1,6 @@
 # Plan Implementacji
 
-Poniższy dokument opisuje planowaną architekturę i podejście do implementacji aplikacji, zgodnie z wytycznymi zadania rekrutacyjnego.
+Poniższy dokument opisuje planowaną architekturę i podejście do implementacji aplikacji, zgodnie z wytycznymi.
 
 ## 1. Struktura Katalogów
 
